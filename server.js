@@ -3,6 +3,8 @@ const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const shortid = require('shortid');
 const path = require('path');
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,12 +45,17 @@ app.post('/shorten', async (req, res) => {
         shortUrl = shortid.generate();
     }
 
+    let hashedPassword = null;
+    if (password) {
+        hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    }
+
     // Simpan URL ke Firestore dengan ID otomatis
     const newUrl = {
         originalUrl,
         shortUrl,
         customAlias: customAlias || null,
-        password: password || null,
+        password: hashedPassword,
         createdDate: admin.firestore.FieldValue.serverTimestamp(),
         expireDate: expireDate ? new Date(expireDate) : null
     };
@@ -58,14 +65,13 @@ app.post('/shorten', async (req, res) => {
     res.json({ shortUrl: `http://localhost:${PORT}/${shortUrl}` });
 });
 
-// Redirect dari short URL ke original URL
 // Endpoint untuk mengakses URL pendek
 app.get('/:shortUrl', async (req, res) => {
     const { shortUrl } = req.params;
     const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
     if (urlSnapshot.empty) {
-        return res.status(404).json({ error: 'URL tidak ditemukan' });
+        return res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
     }
 
     const urlDoc = urlSnapshot.docs[0];
@@ -73,7 +79,9 @@ app.get('/:shortUrl', async (req, res) => {
 
     // Cek apakah URL sudah kedaluwarsa
     if (urlData.expireDate && new Date() > urlData.expireDate.toDate()) {
-        return res.status(410).json({ error: 'URL telah kadaluwarsa' });
+        // Hapus dokumen yang sudah kadaluwarsa
+        await urlDoc.ref.delete();
+        return res.status(410).sendFile(path.join(__dirname, 'public', 'expired.html'));
     }
 
     // Jika URL memiliki password
@@ -84,12 +92,86 @@ app.get('/:shortUrl', async (req, res) => {
             return res.sendFile(path.join(__dirname, 'public', 'password.html'));
         }
 
-        // Jika pengguna telah memasukkan password
-        if (req.query.password === urlData.password) {
+        // Verifikasi password yang dimasukkan pengguna
+        const isPasswordValid = await bcrypt.compare(req.query.password, urlData.password);
+        if (isPasswordValid) {
             // Redirect ke original URL jika password valid
             return res.redirect(urlData.originalUrl);
         } else {
-            return res.status(400).send('Password tidak sesuai');
+            // Jika password salah, tampilkan pesan kesalahan di halaman password
+            return res.send(`
+                <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 10px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Masukkan Kata Sandi</h2>
+        <h5>Kamu butuh kata sandi untuk melanjutkan</h5>
+        <form method="GET" action="">
+            <label for="password">Kata Sandi:</label>
+            <input type="password" id="password" name="password" required>
+            <div id="error-message" style="color: red;">Kata sandi tidak sesuai</div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>
+            `);
         }
     }
 

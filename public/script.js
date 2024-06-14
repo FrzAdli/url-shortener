@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (canvas) {
             const image = canvas.toDataURL('image/png');
             downloadLink.href = image;
-            downloadLink.download = 'qrcode.png';
+            downloadLink.download = 'QRCode.png';
         }
     }
 
@@ -127,9 +127,17 @@ document.addEventListener('DOMContentLoaded', function () {
         // Hapus nilai input setelah formulir dikirimkan
         document.getElementById('original-url').value = '';
         document.getElementById('expire-date').value = '';
-        document.getElementById('no-expire').checked = false;
+        document.getElementById('no-expire').checked = true;
         document.getElementById('custom-alias').value = '';
         document.getElementById('password').value = '';
+
+        // Kembalikan icon dll
+        var copybutton = document.getElementById('copy-button');
+        var icon = copybutton.querySelector('i');
+        icon.classList.add('fa-regular');
+        icon.classList.add('fa-copy');
+        icon.classList.remove('fa-solid');
+        icon.classList.remove('fa-clipboard-check');
     });
 
     // Tambahkan event listener untuk mengubah visibilitas kata sandi saat tombol diklik
