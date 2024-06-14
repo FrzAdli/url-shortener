@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/ce374c5e5e.js" crossorigin="anonymous"></script>
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    /* Custom CSS for uniform font size and header size */
+    .card-header h1,
+    .card-header h2 {
+      font-size: 24px;
+      /* Adjust font size as needed */
+    }
+
+    .navbar .container {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="index.html" style="font-weight: bold;">Coding on Demand - Link Shortener</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container mt-5 mb-5">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card" id="shorten-link-card">
+          <div class="card-header">
+            <h1>Link Shortener</h1>
+          </div>
+          <div class="card-body">
+            <form id="shorten-url-form">
+              <div class="form-group">
+                <label for="original-url">URL</label>
+                <input type="url" class="form-control" id="original-url" placeholder="Masukkan URL asli">
+              </div>
+              <div class="form-group">
+                <label for="custom-alias">Alias Kustom (Opsional)</label>
+                <input type="text" class="form-control" id="custom-alias" placeholder="Masukkan alias kustom">
+                <span id="alias-error" class="error" style="color: red;"></span>
+              </div>
+              <div class="form-group">
+                <label for="password">Kata Sandi (Opsional)</label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="password" placeholder="Masukkan kata sandi">
+                  <div class="input-group-append">
+                    <a class="btn btn-outline-secondary" type="button" id="toggle-password"><i class="fa-solid fa-eye"></i></a>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <div class="form-group flex-grow-1 mr-3">
+                  <label for="expire-date">Berlaku Hingga:</label>
+                  <input type="date" class="form-control" id="expire-date">
+                </div>
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="no-expire" checked>
+                  <label class="form-check-label" for="no-expire">Selamanya</label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Proses</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card" id="hasil-shorten-link-card">
+          <div class="card-header">
+            <h2>Shortened Link</h2>
+          </div>
+          <div class="card-body w-100">
+            <div class="container-fluid d-flex flex-row">
+              <div>
+                <p id="shortened-link" class="p-0 mb-2"></p>
+              </div>
+              <div>
+                <a class="btn d-none p-0 ml-3" id="copy-button"><i class="fa-regular fa-copy"></i></a>
+              </div>
+            </div>
+            <div class="container-fluid d-flex flex-row align-items-end">
+              <div>
+                <div id="qrcode" style="width: 128px !important; height: 128px !important;" class="qr-container"></div>
+                <canvas id="qrcode-large" class="d-none"></canvas>
+              </div>
+              <div>
+                <a class="btn d-none p-0 ml-3" id="download-qr" type="button"><i class="fa-solid fa-download"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Font Awesome -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+
+</body>
+
+</html>

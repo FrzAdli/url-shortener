@@ -1,0 +1,19 @@
+{
+  "name": "url_shortener",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.1.1",
+    "mongoose": "^8.4.0",
+    "shortid": "^2.2.16"
+  }
+}
