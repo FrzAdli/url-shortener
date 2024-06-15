@@ -107,6 +107,8 @@ router.get('/:shortUrl', async (req, res) => {
             // Jika pengguna belum memasukkan password
             if (!req.query.password) {
                 const filePath = path.join(__dirname, '../public/password.html');
+                console.log('Current directory:', __dirname);
+                console.log('File path:', filePath);
                 fs.readFile(filePath, 'utf8', (err, data) => {
                     if (err) {
                     res.status(500).send('Error reading password.html');
