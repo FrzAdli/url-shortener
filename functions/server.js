@@ -18,7 +18,7 @@ const serviceAccount = {
     type: process.env.FIREBASE_TYPE,
     project_id: process.env.FIREBASE_PROJECT_ID,
     private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-    private_key: process.env.FIREBASE_PRIVATE_KEY,
+    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
     client_email: process.env.FIREBASE_CLIENT_EMAIL,
     client_id: process.env.FIREBASE_CLIENT_ID,
     auth_uri: process.env.FIREBASE_AUTH_URI,
@@ -182,8 +182,8 @@ app.get('/:shortUrl', async (req, res) => {
 });
 
 // Netlify mendukung otomatis, jadi tidak perlu menentukan port
-// app.listen(3000, () => {
-//     console.log(`Server is running on port 3000`);
-// });
+app.listen(3000, () => {
+    
+});
 
-module.exports = app; // Export aplikasi untuk Netlify
+// module.exports = app;
