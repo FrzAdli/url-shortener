@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         try {
-            const response = await fetch('/shorten', {
+            const response = await fetch('https://codshortener.netlify.app/.netlify/functions/shorten', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
