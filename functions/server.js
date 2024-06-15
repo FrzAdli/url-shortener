@@ -87,8 +87,6 @@ router.get('/:shortUrl', async (req, res) => {
         const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
         if (urlSnapshot.empty) {
-            console.log(`Received request for short URL: ${shortUrl}`);
-            console.log(`Query result for ${shortUrl}:`, urlSnapshot);
             return res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
         }
 
