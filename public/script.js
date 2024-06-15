@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Hapus nilai input setelah formulir dikirimkan
         document.getElementById('original-url').value = '';
         document.getElementById('expire-date').value = '';
+        document.getElementById('expire-date').disabled = true;
         document.getElementById('no-expire').checked = true;
         document.getElementById('custom-alias').value = '';
         document.getElementById('password').value = '';
