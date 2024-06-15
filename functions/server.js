@@ -87,7 +87,7 @@ router.get('/:shortUrl', async (req, res) => {
         const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
         if (urlSnapshot.empty) {
-            return res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
+            return res.status(404).sendFile(path.resolve(__dirname, '..', 'public', '404.html'));
         }
 
         const urlDoc = urlSnapshot.docs[0];
@@ -97,7 +97,7 @@ router.get('/:shortUrl', async (req, res) => {
         if (urlData.expireDate && new Date() > urlData.expireDate.toDate()) {
             // Hapus dokumen yang sudah kadaluwarsa
             await urlDoc.ref.delete();
-            return res.status(410).sendFile(path.join(__dirname, '..', 'public', 'expired.html'));
+            return res.status(410).sendFile(path.resolve(__dirname, '..', 'public', 'expired.html'));
         }
 
         // Jika URL memiliki password
@@ -105,7 +105,7 @@ router.get('/:shortUrl', async (req, res) => {
             // Jika pengguna belum memasukkan password
             if (!req.query.password) {
                 // Tampilkan halaman memasukkan password
-                return res.sendFile(path.join(process.cwd(), '..', 'public', 'password.html'));
+                return res.sendFile(path.resolve(__dirname, '..', 'public', 'password.html'));
             }
 
             // Verifikasi password yang dimasukkan pengguna
