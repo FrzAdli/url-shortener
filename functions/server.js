@@ -129,18 +129,28 @@ router.get('/:shortUrl', async (req, res) => {
         // Jika URL memiliki password
         if (urlData.password) {
 
-            const directoryPath = '/var'; // Ganti dengan path yang sesuai
+            // Daftar direktori yang ingin Anda jelajahi di /var
+            const directories = ['lock', 'log', 'mail', 'nis', 'opt', 'preserve', 'rapid', 'run', 'runtime', 'spool', 'task', 'telemetry', 'tmp', 'tracer', 'yp'];
 
-            fs.readdir(directoryPath, (err, files) => {
-                if (err) {
-                    console.error('Error reading directory:', err);
-                    return;
-                }
+            // Fungsi untuk membaca dan mencetak isi direktori
+            function readAndPrintDirectory(directoryName) {
+                const directoryPath = path.join('/var', directoryName);
+                fs.readdir(directoryPath, (err, files) => {
+                    if (err) {
+                        console.error(`Error reading directory ${directoryName}:`, err);
+                        return;
+                    }
 
-                console.log('Files in directory:');
-                files.forEach(file => {
-                    console.log(file);
+                    console.log(`Files in directory ${directoryName}:`);
+                    files.forEach(file => {
+                        console.log(file);
+                    });
                 });
+            }
+
+            // Memanggil fungsi untuk setiap direktori dalam array directories
+            directories.forEach(directory => {
+                readAndPrintDirectory(directory);
             });
 
             // Jika pengguna belum memasukkan password
