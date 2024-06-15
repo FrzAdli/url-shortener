@@ -11,9 +11,9 @@ const app = express();
 const router = express.Router();
 
 // Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // Menyediakan file statis
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(express.static(path.join(__dirname, 'public'))); 
 
 // Konfigurasi Firebase Admin SDK
 const serviceAccount = {
@@ -105,8 +105,15 @@ router.get('/:shortUrl', async (req, res) => {
         if (urlData.password) {
             // Jika pengguna belum memasukkan password
             if (!req.query.password) {
-                // Tampilkan halaman memasukkan password
-                return res.sendFile(path.join(__dirname, 'public', 'password.html'));
+                const filePath = path.join(__dirname, '../public/password.html');
+                fs.readFile(filePath, 'utf8', (err, data) => {
+                    if (err) {
+                    res.status(500).send('Error reading password.html');
+                    return;
+                    }
+                    res.status(200).send(data);
+                });
+                return;
             }
 
             // Verifikasi password yang dimasukkan pengguna
