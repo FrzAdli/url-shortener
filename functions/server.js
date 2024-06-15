@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const shortid = require('shortid');
 const path = require('path');
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
 
@@ -12,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // Melayani file statis
+app.use(express.static(path.join(__dirname, '..', 'public'))); // Melayani file statis
 
 // Firebase Admin SDK setup
 const serviceAccount = {
@@ -26,6 +27,7 @@ const serviceAccount = {
     token_uri: process.env.FIREBASE_TOKEN_URI,
     auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
     client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
+    universe_domain: "googleapis.com"
 };
 
 admin.initializeApp({
@@ -83,7 +85,7 @@ app.get('/:shortUrl', async (req, res) => {
     const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
     if (urlSnapshot.empty) {
-        return res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+        return res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
     }
 
     const urlDoc = urlSnapshot.docs[0];
@@ -93,7 +95,7 @@ app.get('/:shortUrl', async (req, res) => {
     if (urlData.expireDate && new Date() > urlData.expireDate.toDate()) {
         // Hapus dokumen yang sudah kadaluwarsa
         await urlDoc.ref.delete();
-        return res.status(410).sendFile(path.join(__dirname, 'public', 'expired.html'));
+        return res.status(410).sendFile(path.join(__dirname, '..', 'public', 'expired.html'));
     }
 
     // Jika URL memiliki password
@@ -101,7 +103,7 @@ app.get('/:shortUrl', async (req, res) => {
         // Jika pengguna belum memasukkan password
         if (!req.query.password) {
             // Tampilkan halaman memasukkan password
-            return res.sendFile(path.join(__dirname, 'public', 'password.html'));
+            return res.sendFile(path.join(__dirname, '..', 'public', 'password.html'));
         }
 
         // Verifikasi password yang dimasukkan pengguna

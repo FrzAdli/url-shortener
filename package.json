@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node functions/server.js"
   },
   "keywords": [],
   "author": "",
@@ -12,9 +12,9 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "firebase-admin": "^12.1.1",
-    "mongoose": "^8.4.0",
     "shortid": "^2.2.16"
   }
 }
