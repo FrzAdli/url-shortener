@@ -1,4 +1,5 @@
 const express = require('express');
+const serverless = require('serverless-http');
 const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const shortid = require('shortid');
@@ -186,6 +187,4 @@ app.get('/:shortUrl', async (req, res) => {
     
 // });
 
-export default {
-    app
-}
+module.exports.handler = serverless(app);
