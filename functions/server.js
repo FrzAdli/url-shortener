@@ -186,4 +186,6 @@ app.get('/:shortUrl', async (req, res) => {
     
 // });
 
-module.exports = app; // Export the Express app instance
+export default {
+    app
+}
