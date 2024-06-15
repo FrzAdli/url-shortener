@@ -76,7 +76,7 @@ app.post('/shorten', async (req, res) => {
 
     await urlsCollection.add(newUrl); // Menggunakan add untuk ID otomatis
 
-    res.json({ shortUrl: `http://localhost:${PORT}/${shortUrl}` });
+    res.json({ shortUrl: `https://codshortener.netlify.app/${shortUrl}` });
 });
 
 // Endpoint untuk mengakses URL pendek
@@ -194,5 +194,5 @@ app.get('/:shortUrl', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    // console.log(`Server is running on port ${PORT}`);
 });
