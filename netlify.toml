@@ -2,7 +2,7 @@
   functions = "functions"
 
 [[redirects]]
-  from = "https://codshortener.netlify.app/:shortUrl"
-  to = "https://codshortener.netlify.app/.netlify/functions/server/:shortUrl"
+  from = "/:shortUrl"
+  to = "/.netlify/functions/server/:shortUrl"
   status = 200
   force = true
