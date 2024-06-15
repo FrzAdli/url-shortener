@@ -1,6 +1,5 @@
 const express = require('express');
 const serverless = require('serverless-http');
-const fs = require('fs');
 const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const shortid = require('shortid');
@@ -12,9 +11,9 @@ const app = express();
 const router = express.Router();
 
 // Middleware
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public'))); // Menyediakan file statis
 
 // Konfigurasi Firebase Admin SDK
 const serviceAccount = {
@@ -106,17 +105,8 @@ router.get('/:shortUrl', async (req, res) => {
         if (urlData.password) {
             // Jika pengguna belum memasukkan password
             if (!req.query.password) {
-                const filePath = path.join(__dirname, '../../../public/password.html');
-                console.log('Current directory:', __dirname);
-                console.log('File path:', filePath);
-                fs.readFile(filePath, 'utf8', (err, data) => {
-                    if (err) {
-                    res.status(500).send('Error reading password.html');
-                    return;
-                    }
-                    res.status(200).send(data);
-                });
-                return;
+                // Tampilkan halaman memasukkan password
+                return res.sendFile(path.join(__dirname, 'public', 'password.html'));
             }
 
             // Verifikasi password yang dimasukkan pengguna
@@ -207,4 +197,4 @@ app.use('/.netlify/functions/server', router);
 //     console.log(`Server running on port 3000`);
 //   });
 
-module.exports.handler = serverless(app);
+module.exports.handler = app;
