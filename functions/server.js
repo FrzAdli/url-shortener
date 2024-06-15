@@ -106,7 +106,7 @@ router.get('/:shortUrl', async (req, res) => {
             // Jika pengguna belum memasukkan password
             if (!req.query.password) {
                 // Tampilkan halaman memasukkan password
-                return res.sendFile(path.join(__dirname, 'public', 'password.html'));
+                return res.sendFile(path.join(__dirname, '..', 'public', 'password.html'));
             }
 
             // Verifikasi password yang dimasukkan pengguna
