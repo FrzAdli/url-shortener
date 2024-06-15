@@ -89,7 +89,19 @@ router.get('/:shortUrl', async (req, res) => {
         const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
         if (urlSnapshot.empty) {
-            return res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+            return res.status(404).send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL not Found</title>
+</head>
+<body>
+    <h1>404 - URL Tidak Ditemukan</h1>
+    <p>URL yang Anda cari tidak ditemukan atau sudah kedaluwarsa.</p>
+</body>
+</html>
+`);
         }
 
         const urlDoc = urlSnapshot.docs[0];
@@ -99,40 +111,88 @@ router.get('/:shortUrl', async (req, res) => {
         if (urlData.expireDate && new Date() > urlData.expireDate.toDate()) {
             // Hapus dokumen yang sudah kadaluwarsa
             await urlDoc.ref.delete();
-            return res.status(410).sendFile(path.join(__dirname, 'public', 'expired.html'));
+            return res.status(410).send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expired URL</title>
+</head>
+<body>
+    <h1>410 - URL Kedaluwarsa</h1>
+    <p>URL yang Anda cari telah kedaluwarsa dan akan menjadi tidak tersedia.</p>
+</body>
+</html>
+`);
         }
 
         // Jika URL memiliki password
         if (urlData.password) {
-
-            // Daftar direktori yang ingin Anda jelajahi di /var
-            const directories = ['lock', 'log', 'mail', 'nis', 'opt', 'preserve', 'rapid', 'run', 'runtime', 'spool', 'task', 'telemetry', 'tmp', 'tracer', 'yp'];
-
-            // Fungsi untuk membaca dan mencetak isi direktori
-            function readAndPrintDirectory(directoryName) {
-                const directoryPath = path.join('/var', directoryName);
-                fs.readdir(directoryPath, (err, files) => {
-                    if (err) {
-                        console.error(`Error reading directory ${directoryName}:`, err);
-                        return;
-                    }
-
-                    console.log(`Files in directory ${directoryName}:`);
-                    files.forEach(file => {
-                        console.log(file);
-                    });
-                });
-            }
-
-            // Memanggil fungsi untuk setiap direktori dalam array directories
-            directories.forEach(directory => {
-                readAndPrintDirectory(directory);
-            });
-
             // Jika pengguna belum memasukkan password
             if (!req.query.password) {
                 // Tampilkan halaman memasukkan password
-                return res.sendFile(path.join(__dirname, 'public', 'password.html'));
+                return res.send(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Enter Password</title>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                margin: 0;
+                                padding: 20px;
+                            }
+                            .container {
+                                max-width: 400px;
+                                margin: 0 auto;
+                                text-align: center;
+                            }
+                            h2 {
+                                margin-bottom: 20px;
+                            }
+                            form {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            }
+                            label {
+                                margin-bottom: 10px;
+                            }
+                            input[type="password"] {
+                                width: 100%;
+                                padding: 10px;
+                                margin-bottom: 20px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                            }
+                            button {
+                                padding: 10px 20px;
+                                background-color: #007bff;
+                                color: #fff;
+                                border: none;
+                                border-radius: 5px;
+                                cursor: pointer;
+                            }
+                            button:hover {
+                                background-color: #0056b3;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <h2>Masukkan Kata Sandi</h2>
+                            <h5>Kamu butuh kata sandi untuk melanjutkan</h5>
+                            <form method="GET" action="">
+                                <label for="password">Kata Sandi:</label>
+                                <input type="password" id="password" name="password" required>
+                                <button type="submit">Submit</button>
+                            </form>
+                        </div>
+                    </body>
+                    </html>
+                `);
             }
 
             // Verifikasi password yang dimasukkan pengguna
