@@ -11,7 +11,7 @@ const app = express();
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // Menyediakan file statis
+app.use(express.static(path.join(__dirname, '..', 'public'))); // Menyediakan file statis
 
 // Konfigurasi Firebase Admin SDK
 const serviceAccount = {
@@ -83,7 +83,7 @@ app.get('/:shortUrl', async (req, res) => {
     const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
     if (urlSnapshot.empty) {
-        return res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+        return res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
     }
 
     const urlDoc = urlSnapshot.docs[0];
@@ -93,7 +93,7 @@ app.get('/:shortUrl', async (req, res) => {
     if (urlData.expireDate && new Date() > urlData.expireDate.toDate()) {
         // Hapus dokumen yang sudah kadaluwarsa
         await urlDoc.ref.delete();
-        return res.status(410).sendFile(path.join(__dirname, 'public', 'expired.html'));
+        return res.status(410).sendFile(path.join(__dirname, '..', 'public', 'expired.html'));
     }
 
     // Jika URL memiliki password
@@ -101,7 +101,7 @@ app.get('/:shortUrl', async (req, res) => {
         // Jika pengguna belum memasukkan password
         if (!req.query.password) {
             // Tampilkan halaman memasukkan password
-            return res.sendFile(path.join(__dirname, 'public', 'password.html'));
+            return res.sendFile(path.join(__dirname, '..', 'public', 'password.html'));
         }
 
         // Verifikasi password yang dimasukkan pengguna
@@ -182,8 +182,8 @@ app.get('/:shortUrl', async (req, res) => {
 });
 
 // Netlify mendukung otomatis, jadi tidak perlu menentukan port
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
+// app.listen(3000, () => {
+//     console.log(`Server is running on port 3000`);
 // });
 
 module.exports = app; // Export aplikasi untuk Netlify
