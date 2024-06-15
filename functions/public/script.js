@@ -100,6 +100,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(body)
             });
 
+            // const response = await fetch('/shorten', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(body)
+            // });
+
             const data = await response.json();
             if (response.ok) {
                 document.getElementById('shortened-link').textContent = data.shortUrl;

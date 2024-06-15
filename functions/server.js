@@ -77,6 +77,7 @@ router.post('/shorten', async (req, res) => {
     await urlsCollection.add(newUrl); // Menggunakan add untuk ID otomatis
 
     res.json({ shortUrl: `https://codshortener.netlify.app/${shortUrl}` });
+    // res.json({ shortUrl: `http://localhost:3000/${shortUrl}` });
 });
 
 // Endpoint untuk mengakses URL pendek
@@ -105,7 +106,7 @@ router.get('/:shortUrl', async (req, res) => {
             // Jika pengguna belum memasukkan password
             if (!req.query.password) {
                 // Tampilkan halaman memasukkan password
-                return res.sendFile(path.join(__dirname, 'password.html'));
+                return res.sendFile(path.join(__dirname, 'public', 'password.html'));
             }
 
             // Verifikasi password yang dimasukkan pengguna
@@ -190,5 +191,10 @@ router.get('/:shortUrl', async (req, res) => {
 });
 
 app.use('/.netlify/functions/server', router);
+// app.use('/', router);
+
+// app.listen(3000, () => {
+//     console.log(`Server running on port 3000`);
+//   });
 
 module.exports.handler = serverless(app);
