@@ -81,7 +81,7 @@ router.post('/shorten', async (req, res) => {
 });
 
 // Endpoint untuk mengakses URL pendek
-router.get('/:shortUrl', async (req, res) => {
+router.get('https://codshortener.netlify.app/.netlify/functions/server/:shortUrl', async (req, res) => {
     const { shortUrl } = req.params;
     const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
