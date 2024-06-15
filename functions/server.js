@@ -1,5 +1,6 @@
 const express = require('express');
 const serverless = require('serverless-http');
+const fs = require('fs');
 const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const shortid = require('shortid');
