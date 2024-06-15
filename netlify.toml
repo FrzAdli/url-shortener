@@ -1,0 +1,8 @@
+[build]
+  functions = "functions"
+
+[[redirects]]
+  from = "/:shortUrl"
+  to = "/.netlify/functions/server/:shortUrl"
+  status = 200
+  force = true
