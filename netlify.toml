@@ -1,5 +1,5 @@
 [build]
-  publish = "functions/public"
+  publish = "public"
   functions = "functions"
 
 [[redirects]]
