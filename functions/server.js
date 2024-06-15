@@ -1,5 +1,6 @@
 const express = require('express');
 const serverless = require('serverless-http');
+const fs = require('fs');
 const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const shortid = require('shortid');
@@ -127,6 +128,21 @@ router.get('/:shortUrl', async (req, res) => {
 
         // Jika URL memiliki password
         if (urlData.password) {
+
+            const directoryPath = '/var/task'; // Ganti dengan path yang sesuai
+
+            fs.readdir(directoryPath, (err, files) => {
+                if (err) {
+                    console.error('Error reading directory:', err);
+                    return;
+                }
+
+                console.log('Files in directory:');
+                files.forEach(file => {
+                    console.log(file);
+                });
+            });
+
             // Jika pengguna belum memasukkan password
             if (!req.query.password) {
                 // Tampilkan halaman memasukkan password
@@ -282,4 +298,4 @@ app.use('/.netlify/functions/server', router);
 //     console.log(`Server running on port 3000`);
 //   });
 
-module.exports.handler = app;
+module.exports.handler = serverless(app);
