@@ -82,13 +82,19 @@ router.post('/shorten', async (req, res) => {
 
 // Endpoint untuk mengakses URL pendek
 router.get('https://codshortener.netlify.app/.netlify/functions/server/:shortUrl', async (req, res) => {
-    const { shortUrl } = req.params;
-    const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
+    try {
+        const { shortUrl } = req.params;
+        const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
-    if (urlSnapshot.empty) {
-        return res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
+        if (urlSnapshot.empty) {
+            console.log(`Received request for short URL: ${shortUrl}`);
+            console.log(`Query result for ${shortUrl}:`, urlSnapshot);
+            // return res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
+        }
+    } catch (error) {
+        console.error('Error in /:shortUrl endpoint:', error);
     }
-
+    
     const urlDoc = urlSnapshot.docs[0];
     const urlData = urlDoc.data();
 
