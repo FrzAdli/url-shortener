@@ -9,6 +9,8 @@ require('dotenv').config();
 
 const app = express();
 
+const router = express.Router();
+
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -37,7 +39,7 @@ const db = admin.firestore();
 const urlsCollection = db.collection('urls');
 
 // Endpoint untuk memendekkan URL
-app.post('/shorten', async (req, res) => {
+router.post('/shorten', async (req, res) => {
     const { originalUrl, customAlias, password, expireDate } = req.body;
 
     // Validasi input
@@ -79,7 +81,7 @@ app.post('/shorten', async (req, res) => {
 });
 
 // Endpoint untuk mengakses URL pendek
-app.get('/:shortUrl', async (req, res) => {
+router.get('/:shortUrl', async (req, res) => {
     const { shortUrl } = req.params;
     const urlSnapshot = await urlsCollection.where('shortUrl', '==', shortUrl).get();
 
@@ -181,6 +183,8 @@ app.get('/:shortUrl', async (req, res) => {
     // Jika URL tidak memiliki password, langsung redirect ke original URL
     res.redirect(urlData.originalUrl);
 });
+
+app.use('/.netlify/functions/server', router)
 
 // Netlify mendukung otomatis, jadi tidak perlu menentukan port
 // app.listen(3000, () => {
