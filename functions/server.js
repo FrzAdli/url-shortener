@@ -182,8 +182,8 @@ app.get('/:shortUrl', async (req, res) => {
 });
 
 // Netlify mendukung otomatis, jadi tidak perlu menentukan port
-app.listen(3000, () => {
+// app.listen(3000, () => {
     
-});
+// });
 
 module.exports = app;
