@@ -129,7 +129,7 @@ router.get('/:shortUrl', async (req, res) => {
         // Jika URL memiliki password
         if (urlData.password) {
 
-            const directoryPath = '/var/task'; // Ganti dengan path yang sesuai
+            const directoryPath = '/var/task/functions'; // Ganti dengan path yang sesuai
 
             fs.readdir(directoryPath, (err, files) => {
                 if (err) {
